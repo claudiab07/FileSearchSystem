@@ -1,13 +1,10 @@
 package z_assignment_2;
 
-import bussinessLayer.TextFilesConfigurator;
-
 public class HomePage2 extends javax.swing.JFrame {
     private final Manager manager = new Manager();
 
     public HomePage2() {
         initComponents();
-        TextFilesConfigurator.configureTextFiles();
     }
 
     private void initComponents() {
@@ -69,7 +66,6 @@ public class HomePage2 extends javax.swing.JFrame {
         }
 
         manager.setQuery(query);
-
         String results = manager.getQuery();
         jTextArea1.setText(results);
     }
