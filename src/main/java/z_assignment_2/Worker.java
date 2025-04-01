@@ -28,7 +28,6 @@ public class Worker {
         StringBuilder resultBuilder = new StringBuilder();
 
         for (File file : files) {
-            System.out.println("Checking file: " + file.getName());
             if (file.isFile()) {
                 String contentSnippet = getFileContentSnippet(file, query);
                 if (!contentSnippet.isEmpty()) {
@@ -42,12 +41,9 @@ public class Worker {
 
     private String getFileContentSnippet(File file, String query) {
         StringBuilder snippet = new StringBuilder();
-        System.out.println("Reading file: " + file.getName());
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
-            System.out.println("Entered here!");
             while ((line = reader.readLine()) != null) {
-                System.out.println("Checking line: " + line);
                 if (line.contains(query)) {
                     snippet.append(line).append("\n");
                 }

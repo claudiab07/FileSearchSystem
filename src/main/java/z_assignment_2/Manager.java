@@ -7,6 +7,7 @@ public class Manager {
     private String query;
     private static final Worker[] workers = new Worker[3];
     private List<String> searchResults = new ArrayList<>();
+    private final Map<String, String> resultCache = new HashMap<>();
 
     public Manager() {
         initializeWorkers();
@@ -24,16 +25,24 @@ public class Manager {
             return;
         }
 
+        if (resultCache.containsKey(query)) {
+            System.out.println("Cache hit!");
+            searchResults = new ArrayList<>(Arrays.asList(resultCache.get(query).split("\n\n")));
+            return;
+        }
+
         searchResults.clear();
 
         for (Worker worker : workers) {
             String result = worker.searchFiles(query);
             if (!result.isEmpty()) {
-                System.out.println("RESULT " + result);
                 searchResults.add(result);
-            } else{
-                System.out.println("No result for this worker");
             }
+        }
+
+        if (!searchResults.isEmpty()) {
+            String cachedResult = String.join("\n\n", searchResults);
+            resultCache.put(query, cachedResult);
         }
     }
 
