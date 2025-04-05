@@ -1,10 +1,13 @@
 package z_assignment_2;
 
+import java.io.IOException;
+
 public class HomePage2 extends javax.swing.JFrame {
     private final Manager manager = new Manager();
 
     public HomePage2() {
         initComponents();
+        startWorkers();
     }
 
     private void initComponents() {
@@ -69,6 +72,34 @@ public class HomePage2 extends javax.swing.JFrame {
         String results = manager.getQuery();
         jTextArea1.setText(results);
     }
+
+    public void startWorkers() {
+        new Thread(() -> {
+            try {
+                //new Worker("C:\\Users\\claud\\OneDrive\\Documente\\Facultate\\An 3 Sem2\\SD\\Data\\folder1", 8001).startServer();
+                new Worker("C:\\Users\\claud\\OneDrive\\Documente\\Facultate\\An 2", 8001).startServer();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+
+        new Thread(() -> {
+            try {
+                new Worker("C:\\Users\\claud\\OneDrive\\Documente\\Facultate\\An 3 Sem1", 8002).startServer();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+
+        new Thread(() -> {
+            try {
+                new Worker("C:\\Users\\claud\\OneDrive\\Documente\\Facultate\\An 3 Sem2", 8003).startServer();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
 
     // Variables declaration
     private javax.swing.JLabel jLabel1;
