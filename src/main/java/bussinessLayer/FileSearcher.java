@@ -6,47 +6,55 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.*;
 
 public class FileSearcher {
-    public String getSearchResults(String query) {
+    public String getSearchResults(String rawQuery) {
         StringBuilder resultText = new StringBuilder();
-        String sql = "SELECT filename, content, extension, timestamp FROM files WHERE filename ILIKE ? OR content ILIKE ?";
+        Map<String, String> queryMap = QueryParser.parseQuery(rawQuery);
+
+        StringBuilder sql = new StringBuilder("SELECT * FROM files WHERE 1=1");
+        List<String> paramValues = new ArrayList<>();
+
+        if (queryMap.containsKey("path")) {
+            sql.append(" AND path ILIKE ?");
+            System.out.println("path =" + queryMap.get("path"));
+            paramValues.add("%" + queryMap.get("path").replace("\\", "\\\\") + "%");
+        }
+        if (queryMap.containsKey("content")) {
+            sql.append(" AND content ILIKE ?");
+            System.out.println("content =" + queryMap.get("content"));
+            paramValues.add("%" + queryMap.get("content") + "%");
+        }
+        if (queryMap.containsKey("filename")) {
+            sql.append(" AND filename ILIKE ?");
+            System.out.println("filename =" + queryMap.get("filename"));
+            paramValues.add("%" + queryMap.get("filename") + "%");
+        }
+
+        sql.append(" ORDER BY score DESC");
+
+        System.out.println(" SQL " + sql);
+        System.out.println("PARAMS " + paramValues);
 
         try (Connection conn = ConnectionFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
 
-            stmt.setString(1, "%" + query + "%");
-            stmt.setString(2, "%" + query + "%");
+            for (int i = 0; i < paramValues.size(); i++) {
+                stmt.setString(i + 1, paramValues.get(i));
+            }
 
             ResultSet rs = stmt.executeQuery();
 
+            boolean hasResults = false;
+
             while (rs.next()) {
-                String filename = rs.getString("filename");
-                String content = rs.getString("content");
-                String extension = rs.getString("extension");
-                String timestamp = rs.getTimestamp("timestamp").toString();
-
-                String[] lines = content.split("\n");
-                StringBuilder snippet = new StringBuilder();
-                int lineCount = 0;
-
-                for (String line : lines) {
-                    snippet.append(line).append("\n");
-                    lineCount++;
-                    if (lineCount == 3) {
-                        break;
-                    }
-                }
-
-                resultText.append("FILE NAME: ").append(filename).append("\n")
-                        .append("EXTENSION: ").append(extension).append("\n")
-                        .append("LAST MODIFIED: ").append(timestamp).append("\n")
-                        .append("CONTENT: ").append("\n")
-                        .append(snippet.toString()).append("\n")
-                        .append("-------------------------------------------end-of-file--\n\n");
+                hasResults = true;
+                FileResult result = new FileResult(rs);
+                resultText.append(result.format());
             }
 
-            if (resultText.length() == 0) {
+            if (!hasResults) {
                 resultText.append("No matches found");
             }
 
