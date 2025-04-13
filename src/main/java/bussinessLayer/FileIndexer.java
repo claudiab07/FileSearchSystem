@@ -2,6 +2,8 @@ package bussinessLayer;
 
 import connection.ConnectionFactory;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -105,11 +107,43 @@ public class FileIndexer {
 
             System.out.println("Batch insert complete. " + result.length + " records inserted.");
 
+            generateReport(result.length);
+
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             filesToInsert.clear();
         }
+    }
+
+    private void generateReport(int length) {
+        String reportFormat = IndexerConfig.getReportFormat();
+        String reportFilepath = IndexerConfig.getReportFilepath();
+
+        try (FileWriter writer = new FileWriter(reportFilepath)) {
+            if ("TEXT".equalsIgnoreCase(reportFormat)) {
+                writeTextReport(writer, length);
+            } else if ("CSV".equalsIgnoreCase(reportFormat)) {
+                writeCSVReport(writer, length);
+            } else {
+                writer.write("Unknown report format.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void writeTextReport(FileWriter writer, int length) throws IOException {
+        writer.write("Indexing Report\n");
+        writer.write("Total Files Indexed: " + length + "\n");
+        writer.write("Files Indexed Successfully: " + filesToInsert.size() + "\n");
+        writer.write("Timestamp: " + new java.util.Date() + "\n");
+    }
+
+    private void writeCSVReport(FileWriter writer, int length) throws IOException {
+        writer.write("Indexing Report\n");
+        writer.write("Total Files Indexed, Files Indexed Successfully, Timestamp\n");
+        writer.write(length + "," + filesToInsert.size() + "," + new java.util.Date() + "\n");
     }
 
     public void clearDatabase() {

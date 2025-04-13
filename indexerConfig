@@ -1,0 +1,3 @@
+report.format=TEXT
+
+report.filepath=reports/index_report.txt

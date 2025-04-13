@@ -31,27 +31,7 @@ public class FileResult {
                 "LAST MODIFIED: " + timestamp + "\n" +
                 "SCORE: " + score + "\n" +
                 "CONTENT:\n" +
-                snippet.toString() +
+                snippet +
                 "-------------------------------------------end-of-file--\n\n";
-    }
-
-    public String getFilename() {
-        return filename;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public String getExtension() {
-        return extension;
-    }
-
-    public String getTimestamp() {
-        return timestamp;
-    }
-
-    public double getScore() {
-        return score;
     }
 }
