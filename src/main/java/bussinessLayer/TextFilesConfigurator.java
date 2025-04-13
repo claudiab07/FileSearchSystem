@@ -1,11 +1,14 @@
 package bussinessLayer;
 
 import java.io.File;
+import java.util.Map;
+import java.util.Queue;
 
 public class TextFilesConfigurator {
     private static String query;
     private static FileIndexer indexer = new FileIndexer();
     private static FileSearcher searcher = new FileSearcher();
+    private static Queue<String> searchCache;
 
     public TextFilesConfigurator() {
     }
@@ -38,6 +41,11 @@ public class TextFilesConfigurator {
     public static String getQuery() {
         return searcher.getSearchResults(query);
     }
+
+    public static Map<String, String> getSearchCache() {
+        return searcher.getSearchCache();
+    }
+
 
     public static void setQuery(String query) {
         TextFilesConfigurator.query = query;

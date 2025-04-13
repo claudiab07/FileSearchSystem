@@ -22,4 +22,6 @@ public class IndexerConfig {
     public static String getReportFilepath() {
         return config.getProperty("report.filepath", "index_report.txt");
     }
+
+    public static int getSearchCacheSize() { return Integer.parseInt(config.getProperty("report.cacheSize", String.valueOf(10)));}
 }

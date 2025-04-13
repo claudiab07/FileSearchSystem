@@ -9,8 +9,23 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class FileSearcher {
+    private Map<String, String> searchCache;
+    private int cacheSize;
+
+    public FileSearcher() {
+        this.cacheSize = IndexerConfig.getSearchCacheSize();
+        this.searchCache = new LinkedHashMap<>(cacheSize, 0.75f, true);
+    }
+
     public String getSearchResults(String rawQuery) {
         StringBuilder resultText = new StringBuilder();
+
+        if (searchCache.containsKey(rawQuery)) {
+            resultText.append("Cache hit!\n");
+            resultText.append(searchCache.get(rawQuery));
+            return resultText.toString();
+        }
+
         Map<String, String> queryMap = QueryParser.parseQuery(rawQuery);
 
         StringBuilder sql = new StringBuilder("SELECT * FROM files WHERE 1=1");
@@ -45,8 +60,8 @@ public class FileSearcher {
             }
 
             ResultSet rs = stmt.executeQuery();
-
             boolean hasResults = false;
+            StringBuilder queryResult = new StringBuilder();
 
             while (rs.next()) {
                 hasResults = true;
@@ -58,11 +73,28 @@ public class FileSearcher {
                 resultText.append("No matches found");
             }
 
+            if (searchCache.size() >= cacheSize) {
+                Iterator<String> iterator = searchCache.keySet().iterator();
+                if (iterator.hasNext()) {
+                    iterator.next();
+                    iterator.remove();
+                }
+            }
+
+            searchCache.put(rawQuery, queryResult.toString());
+
+            resultText.append(queryResult.toString());
+
         } catch (SQLException e) {
             e.printStackTrace();
             resultText.append("Error fetching data");
         }
 
+
         return resultText.toString();
+    }
+
+    public Map<String, String> getSearchCache() {
+        return searchCache;
     }
 }
