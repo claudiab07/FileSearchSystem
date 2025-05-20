@@ -33,24 +33,24 @@ public class FileSearcher {
 
         if (queryMap.containsKey("path")) {
             sql.append(" AND path ILIKE ?");
-            System.out.println("path =" + queryMap.get("path"));
+//            System.out.println("path =" + queryMap.get("path"));
             paramValues.add("%" + queryMap.get("path").replace("\\", "\\\\") + "%");
         }
         if (queryMap.containsKey("content")) {
             sql.append(" AND content ILIKE ?");
-            System.out.println("content =" + queryMap.get("content"));
+//            System.out.println("content =" + queryMap.get("content"));
             paramValues.add("%" + queryMap.get("content") + "%");
         }
         if (queryMap.containsKey("filename")) {
             sql.append(" AND filename ILIKE ?");
-            System.out.println("filename =" + queryMap.get("filename"));
+//            System.out.println("filename =" + queryMap.get("filename"));
             paramValues.add("%" + queryMap.get("filename") + "%");
         }
 
         sql.append(" ORDER BY score DESC");
 
-        System.out.println(" SQL " + sql);
-        System.out.println("PARAMS " + paramValues);
+//        System.out.println(" SQL " + sql);
+//        System.out.println("PARAMS " + paramValues);
 
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql.toString())) {

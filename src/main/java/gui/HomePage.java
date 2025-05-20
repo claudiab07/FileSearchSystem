@@ -3,6 +3,7 @@ package gui;
 import bussinessLayer.TextFilesConfigurator;
 
 import javax.swing.*;
+import java.net.URL;
 import java.util.*;
 
 
@@ -22,6 +23,7 @@ public class HomePage  extends javax.swing.JFrame {
         jTextField1 = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList<>();
+        jLabelWidget = new javax.swing.JLabel();
         jLabelBackround = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -54,14 +56,17 @@ public class HomePage  extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jTextField1);
-        jTextField1.setBounds(30, 110, 220, 30);
+        jTextField1.setBounds(30, 210, 220, 30);
 
         jScrollPane2.setViewportView(jList1);
 
         getContentPane().add(jScrollPane2);
-        jScrollPane2.setBounds(30, 170, 220, 120);
+        jScrollPane2.setBounds(30, 250, 220, 120);
 
-        jLabelBackround.setIcon(new javax.swing.ImageIcon(getClass().getResource("/searchBackroundImage.jpg")));
+        getContentPane().add(jLabelWidget);
+        jLabelWidget.setBounds(150, 110, 100, 80);
+
+        jLabelBackround.setBackground(new java.awt.Color(169, 255, 161, 255));
         getContentPane().add(jLabelBackround);
         jLabelBackround.setBounds(0, 0, 600, 400);
 
@@ -78,6 +83,27 @@ public class HomePage  extends javax.swing.JFrame {
         if (query.isEmpty()) {
             jTextArea1.setText("");
             return;
+        }
+
+        if(query.contains("calculator")){
+            jLabelWidget.setIcon(new javax.swing.ImageIcon(getClass().getResource("/calculator.png")));
+            getContentPane().add(jLabelWidget);
+            jLabelWidget.setBounds(150, 110, 100, 80);
+        }
+        if(query.contains("map") || query.contains("location")){
+            jLabelWidget.setIcon(new javax.swing.ImageIcon(getClass().getResource("/location.png")));
+            getContentPane().add(jLabelWidget);
+            jLabelWidget.setBounds(150, 110, 100, 80);
+        }
+        if(query.contains("data")){
+            jLabelWidget.setIcon(new javax.swing.ImageIcon(getClass().getResource("/data.png")));
+            getContentPane().add(jLabelWidget);
+            jLabelWidget.setBounds(150, 110, 100, 80);
+        }
+        if(query.contains("software")){
+            jLabelWidget.setIcon(new javax.swing.ImageIcon(getClass().getResource("/software.png")));
+            getContentPane().add(jLabelWidget);
+            jLabelWidget.setBounds(150, 110, 100, 80);
         }
 
 
@@ -101,6 +127,7 @@ public class HomePage  extends javax.swing.JFrame {
     // Variables declaration
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabelBackround;
+    private javax.swing.JLabel jLabelWidget;
     private javax.swing.JList<String> jList1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
