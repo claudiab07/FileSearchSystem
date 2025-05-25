@@ -90,18 +90,23 @@ public class HomePage  extends javax.swing.JFrame {
             getContentPane().add(jLabelWidget);
             jLabelWidget.setBounds(150, 110, 100, 80);
         }
-        if(query.contains("map") || query.contains("location")){
+        else if(query.contains("map") || query.contains("location")){
             jLabelWidget.setIcon(new javax.swing.ImageIcon(getClass().getResource("/location.png")));
             getContentPane().add(jLabelWidget);
             jLabelWidget.setBounds(150, 110, 100, 80);
         }
-        if(query.contains("data")){
+        else if(query.contains("data")){
             jLabelWidget.setIcon(new javax.swing.ImageIcon(getClass().getResource("/data.png")));
             getContentPane().add(jLabelWidget);
             jLabelWidget.setBounds(150, 110, 100, 80);
         }
-        if(query.contains("software")){
+        else if(query.contains("software")){
             jLabelWidget.setIcon(new javax.swing.ImageIcon(getClass().getResource("/software.png")));
+            getContentPane().add(jLabelWidget);
+            jLabelWidget.setBounds(150, 110, 100, 80);
+        }
+        else {
+            jLabelWidget.setIcon(null);
             getContentPane().add(jLabelWidget);
             jLabelWidget.setBounds(150, 110, 100, 80);
         }

@@ -1,14 +1,28 @@
 package bussinessLayer;
 
+import searchLayer.CachedSearcherProxy;
+import searchLayer.SearchService;
+import searchLayer.CorrectingSearchService;
+import spellcheck.NorvigSpellingCorrector;
+
 import java.io.File;
+import java.io.IOException;
 import java.util.Map;
-import java.util.Queue;
 
 public class TextFilesConfigurator {
     private static String query;
     private static FileIndexer indexer = new FileIndexer();
-    private static FileSearcher searcher = new FileSearcher();
-    private static Queue<String> searchCache;
+    private static SearchService searcher;
+
+    static {
+        try {
+            searcher = new CorrectingSearchService(new CachedSearcherProxy(), new NorvigSpellingCorrector());
+        } catch (IOException e) {
+            e.printStackTrace();
+            searcher = new CachedSearcherProxy();
+        }
+    }
+
 
     public TextFilesConfigurator() {
     }
@@ -42,9 +56,21 @@ public class TextFilesConfigurator {
         return searcher.getSearchResults(query);
     }
 
+
     public static Map<String, String> getSearchCache() {
-        return searcher.getSearchCache();
+        if (searcher instanceof CachedSearcherProxy proxy) {
+            return proxy.getCache();
+        }
+        if (searcher instanceof CorrectingSearchService correcting) {
+            SearchService inner = correcting.getDelegate();
+            if (inner instanceof CachedSearcherProxy proxy) {
+                return proxy.getCache();
+            }
+        }
+        return null;
     }
+
+
 
 
     public static void setQuery(String query) {
